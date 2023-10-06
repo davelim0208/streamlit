@@ -1,5 +1,6 @@
 import streamlit as st
 import openai
+!pip install openai
 
 # Set your Azure OpenAI API key
 api_key = '250783a2a3ed4cbe93dd0d7d2c443144'
