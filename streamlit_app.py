@@ -1,21 +1,36 @@
 import streamlit as st
-from googletrans import Translator
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Streamlit UI
-st.title("English to Chinese Text Converter")
+st.title("Linear Graphs App")
 
-# Create a text input field for English text
-english_text = st.text_input("Enter English text:")
+# Create a dictionary to map button labels to linear functions
+button_functions = {
+    "Graph 1": lambda x: 2 * x,
+    "Graph 2": lambda x: 3 * x,
+    "Graph 3": lambda x: -2 * x,
+    "Graph 4": lambda x: 0.5 * x,
+    "Graph 5": lambda x: -1 * x
+}
 
-# Create a button to perform the translation
-if st.button("Translate to Chinese"):
-    # Initialize the translator
-    translator = Translator()
+# Create a selectbox to choose a graph
+selected_graph = st.selectbox("Select a graph:", list(button_functions.keys()))
 
-    # Translate the English text to Chinese
-    chinese_text = translator.translate(english_text, src="en", dest="zh-CN")
+# Create a button to display the selected graph
+if st.button("Show Graph"):
+    x = np.linspace(-10, 10, 100)
+    y = button_functions[selected_graph](x)
 
-    # Display the translated text
-    st.write(f"Chinese translation: {chinese_text.text}")
-    streamlit run english_to_chinese_converter.py
+    # Create a DataFrame for plotting
+    df = pd.DataFrame({'x': x, 'y': y})
+
+    # Plot the graph
+    plt.figure(figsize=(8, 6))
+    plt.plot(df['x'], df['y'])
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title(selected_graph)
+    st.pyplot(plt)
 
