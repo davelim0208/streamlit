@@ -1,14 +1,17 @@
 import streamlit as st
 
 # Streamlit UI
-st.title("Simple Streamlit App")
+st.title("Button Display App")
 
-# Text input
-user_name = st.text_input("Enter your name:", "John Doe")
+# Create four buttons
+if st.button("Button 1"):
+    st.write("You clicked Button 1!")
 
-# Button to greet the user
-if st.button("Greet"):
-    st.write(f"Hello, {user_name}!")
+if st.button("Button 2"):
+    st.write("You clicked Button 2!")
 
-# Add more content to your app as needed
+if st.button("Button 3"):
+    st.write("You clicked Button 3!")
 
+if st.button("Button 4"):
+    st.write("You clicked Button 4!")
