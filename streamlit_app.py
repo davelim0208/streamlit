@@ -17,3 +17,5 @@ if st.button("Translate to Chinese"):
 
     # Display the translated text
     st.write(f"Chinese translation: {chinese_text.text}")
+    streamlit run english_to_chinese_converter.py
+
