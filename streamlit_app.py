@@ -31,5 +31,4 @@ if st.button("Generate Response"):
 
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
-streamlit run azure_openai_prompt_generator.py
 
