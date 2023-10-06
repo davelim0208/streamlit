@@ -14,9 +14,21 @@ headers = {
 def get_gpt3_response_from_azure(prompt):
     """Function to get GPT-3's response from Azure's OpenAI service."""
     data = {
-        "prompt": prompt,
-        "max_tokens": 150
-    }
+    "model": "gpt-4",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant."
+        },
+        {
+            "role": "user",
+            "content": "How are you doing today?"
+        }
+    ],
+    "temperature": 0.7,
+    "top_p": 1,
+    "max_tokens": 256
+}
     response = requests.post(AZURE_ENDPOINT, headers=headers, json=data)
     response_json = response.json()
 
