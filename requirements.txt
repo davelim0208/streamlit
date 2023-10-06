@@ -1,5 +1,5 @@
-openai
-streamlit
-altalr
+altair
 pandas
+streamlit
+openai
 requests
