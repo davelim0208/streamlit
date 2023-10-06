@@ -11,5 +11,4 @@ if st.button("Greet"):
     st.write(f"Hello, {user_name}!")
 
 # Add more content to your app as needed
-streamlit run simple_streamlit_app.py
 
