@@ -1,36 +1,35 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+import openai
+
+# Set your Azure OpenAI API key
+api_key = '250783a2a3ed4cbe93dd0d7d2c443144'
+
+# Initialize the Azure OpenAI client
+openai.api_key = api_key
 
 # Streamlit UI
-st.title("Linear Graphs App")
+st.title("Azure OpenAI Prompt Generator")
 
-# Create a dictionary to map button labels to linear functions
-button_functions = {
-    "Graph 1": lambda x: 2 * x,
-    "Graph 2": lambda x: 3 * x,
-    "Graph 3": lambda x: -2 * x,
-    "Graph 4": lambda x: 0.5 * x,
-    "Graph 5": lambda x: -1 * x
-}
+# Create a text input field for the prompt
+prompt = st.text_area("Enter a prompt:", "Translate the following English text to French: 'Hello, world.'")
 
-# Create a selectbox to choose a graph
-selected_graph = st.selectbox("Select a graph:", list(button_functions.keys()))
+# Create a button to generate a response
+if st.button("Generate Response"):
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=prompt,
+            max_tokens=50,  # Adjust as needed
+            n=1,
+            stop=None,
+            temperature=0.7  # Adjust for randomness
+        )
 
-# Create a button to display the selected graph
-if st.button("Show Graph"):
-    x = np.linspace(-10, 10, 100)
-    y = button_functions[selected_graph](x)
+        # Display the generated response
+        st.write("Generated Response:")
+        st.write(response.choices[0].text.strip())
 
-    # Create a DataFrame for plotting
-    df = pd.DataFrame({'x': x, 'y': y})
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
 
-    # Plot the graph
-    plt.figure(figsize=(8, 6))
-    plt.plot(df['x'], df['y'])
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title(selected_graph)
-    st.pyplot(plt)
 
