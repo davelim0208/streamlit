@@ -1,17 +1,19 @@
 import streamlit as st
+from googletrans import Translator
 
 # Streamlit UI
-st.title("Button Display App")
+st.title("English to Chinese Text Converter")
 
-# Create four buttons
-if st.button("Button 1"):
-    st.write("You clicked Button 1!")
+# Create a text input field for English text
+english_text = st.text_input("Enter English text:")
 
-if st.button("Button 2"):
-    st.write("You clicked Button 2!")
+# Create a button to perform the translation
+if st.button("Translate to Chinese"):
+    # Initialize the translator
+    translator = Translator()
 
-if st.button("Button 3"):
-    st.write("You clicked Button 3!")
+    # Translate the English text to Chinese
+    chinese_text = translator.translate(english_text, src="en", dest="zh-CN")
 
-if st.button("Button 4"):
-    st.write("You clicked Button 4!")
+    # Display the translated text
+    st.write(f"Chinese translation: {chinese_text.text}")
