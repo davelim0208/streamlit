@@ -1,58 +1,80 @@
 import streamlit as st
-import openai
+import requests
 
-# Set your Azure OpenAI API key
-api_key = '250783a2a3ed4cbe93dd0d7d2c443144'
+ 
 
-# Initialize the Azure OpenAI client
-openai.api_key = api_key
+# Set up Azure OpenAI API endpoint and key
+AZURE_ENDPOINT = 'https://nie-gpt.openai.azure.com/openai/deployments/GPT_4/chat/completions?api-version=2023-06-01-preview&api-key=250783a2a3ed4cbe93dd0d7d2c443144'  # Replace with your endpoint
+AZURE_API_KEY = '250783a2a3ed4cbe93dd0d7d2c443144'  # Replace with your key
 
-# Streamlit UI
-st.title("ChatGPT Simulation")
+ 
 
-# Create a conversation history to store user and AI messages
-conversation_history = []
+headers = {
+    "Content-Type": "application/json"
+}
 
-# Function to send a message to ChatGPT and update the conversation history
-def send_message(message):
-    # Add the user's message to the conversation history
-    conversation_history.append({"role": "user", "content": message})
+ 
 
-    # Generate a response from ChatGPT
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        messages=conversation_history
-    )
+def get_gpt3_response_from_azure(prompt):
+    """Function to get GPT-3's response from Azure's OpenAI service."""
+    data = {
+    "model": "gpt-4",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant."
+        },
+        {
+            "role": "user",
+            "content": "How are you doing today?"
+        }
+    ],
+    "temperature": 0.7,
+    "top_p": 1,
+    "max_tokens": 256
+}
+    response = requests.post(AZURE_ENDPOINT, headers=headers, json=data)
+    response_json = response.json()
 
-    # Add ChatGPT's response to the conversation history
-    conversation_history.append({"role": "assistant", "content": response.choices[0].message["content"]})
+ 
 
-    return response.choices[0].message["content"]
+    # Extract and return the response text from the JSON response (adjust as per Azure's response structure)
+    return response_json['choices'][0]['message']['content']
 
-# Chat input field
-user_input = st.text_input("You:", "")
+ 
 
-# Send button
-if st.button("Send"):
-    if user_input.strip() != "":
-        user_message = user_input
-        st.text(f"You: {user_message}")
-        
-        # Send the user's message to ChatGPT
-        assistant_message = send_message(user_message)
-        
-        st.text(f"ChatGPT: {assistant_message}")
-        st.text("")
+def main():
+    st.title("Chat Simulation with Azure OpenAI GPT-3")
 
-# Clear button to reset the conversation
-if st.button("Clear Conversation"):
-    conversation_history = []
+ 
 
-# Display the conversation history
-if len(conversation_history) > 0:
-    st.markdown("## Conversation History")
-    for message in conversation_history:
-        if message["role"] == "user":
-            st.text(f"You: {message['content']}")
-        else:
-            st.text(f"ChatGPT: {message['content']}")
+    # Store the conversation history in a session state if it doesn't exist
+    if 'conversation_history' not in st.session_state:
+        st.session_state.conversation_history = []
+
+ 
+
+    # Text box for user input
+    user_input = st.text_input("You:")
+
+ 
+
+    # Submit button to send the message
+    if st.button("Submit"):
+        # Append the user's message to the conversation history
+        st.session_state.conversation_history.append(f"You: {user_input}")
+
+        # Get GPT-3's response from Azure
+        gpt3_response = get_gpt3_response_from_azure(user_input)
+        st.session_state.conversation_history.append(f"ChatGPT: {gpt3_response}")
+
+ 
+
+    # Display the conversation history
+    for message in st.session_state.conversation_history:
+        st.write(message)
+
+ 
+
+if __name__ == "__main__":
+    main()
